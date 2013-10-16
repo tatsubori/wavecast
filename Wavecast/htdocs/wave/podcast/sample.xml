@@ -3,7 +3,7 @@
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
 	version="2.0">
 	<channel>
-		<title>All About Everything</title>
+		<title>Mich's Test Podcast</title>
 		<link>http://www.example.com/podcasts/everything/index.html</link>
 		<language>en-us</language>
 		<copyright>&#x2117; &amp; &#xA9; 2005 John Doe &amp; Family</copyright>
@@ -16,30 +16,28 @@
 			week we dive into any subject known to man and talk about it as much
 			as we can. Look for our Podcast in the iTunes Store</description>
 		<itunes:owner>
-			<itunes:name>John Doe</itunes:name>
-			<itunes:email>john.doe@example.com</itunes:email>
+			<itunes:name>Michiaki Tatsubori</itunes:name>
+			<itunes:email>mich@acm.org</itunes:email>
 		</itunes:owner>
 		<itunes:image
-			href="http://example.com/podcasts/everything/AllAboutEverything.jpg" />
+			href="/media/20131008/UHF-0106-20131008-1900.jpg" />
 		<itunes:category text="Technology">
 			<itunes:category text="Gadgets" />
 		</itunes:category>
 		<itunes:category text="TV &amp; Film" />
 		<item>
-			<title>Shake Shake Shake Your Spices</title>
-			<itunes:author>John Doe</itunes:author>
-			<itunes:subtitle>A short primer on table spices</itunes:subtitle>
-			<itunes:summary>This week we talk about salt and pepper shakers,
-				comparing and contrasting pour rates, construction materials, and
-				overall aesthetics. Come and join the party!</itunes:summary>
+			<title>今すぐ覗きたい24の財布</title>
+			<itunes:author>#06&nbsp;&nbsp;TBS [22] | 地デジ</itunes:author>
+			<itunes:subtitle>日本を騒がす超有名人の賢いお金の使い方</itunes:subtitle>
+			<itunes:summary><![CDATA[This week we talk about salt and pepper shakers, comparing and contrasting pour rates, construction materials, and overall aesthetics. Come and join the party!]]></itunes:summary>
 			<itunes:image
-				href="http://example.com/podcasts/everything/AllAboutEverything/Episode1.jpg" />
+				href="/media/20131008/UHF-0106-20131008-1900.jpg" />
 			<enclosure
-				url="http://example.com/podcasts/everything/AllAboutEverythingEpisode3.m4a"
-				length="8727310" type="audio/x-m4a" />
-			<guid>http://example.com/podcasts/archive/aae20050615.m4a</guid>
-			<pubDate>Wed, 15 Jun 2005 19:00:00 GMT</pubDate>
-			<itunes:duration>7:04</itunes:duration>
+				url="/media/20131008/UHF-0106-20131008-1900-s.mp4"
+				length="378354189" type="video/mp4" />
+			<guid>http://tatsubori.net/wavecast/media/20131008/UHF-0106-20131008-1900-s.mp4</guid>
+			<pubDate>Tue, 8 Oct 2013 19:00:00 JST</pubDate>
+			<itunes:duration>114:00</itunes:duration>
 		</item>
 		<item>
 			<title>Socket Wrench Shootout</title>
