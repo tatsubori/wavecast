@@ -17,7 +17,7 @@ if (!($rs = mysql_query($sql))) die;
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
 	<channel>
 		<title>録画番組</title>
-		<link>http://tatsubori.bf1.jp/wave/list.php</link>
+		<link>http://wavecast.tv/01/</link>
 		<language>ja-jp</language>
 		<copyright>&#x2117; &amp; &#xA9; 2013 Michiaki Tatsubori</copyright>
 		<itunes:author>Michiaki Tatsubori</itunes:author>
