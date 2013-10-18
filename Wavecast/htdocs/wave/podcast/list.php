@@ -42,7 +42,7 @@ while ($item = mysql_fetch_array($rs)) {
 
 	$filename = "/media/".$wDate2."/".$item['ch_type']."-".$item['ch_code']."-".$wDate3;
 	$wVideo = "http://${host}${filename}-s.mp4";
-	$wGUID = "http://tatsubori.bf1.jp${filename}-s.mp4";
+	$wGUID = "http://tatsubori.net/wavecast${filename}-s.mp4";
 	$filesize = filesize($_SERVER['DOCUMENT_ROOT'] . "${filename}-s.mp4");
 	
 	if ($item['err_flg'] == 1) {
