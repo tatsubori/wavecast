@@ -76,7 +76,6 @@ while ($item = mysql_fetch_array($rs)) {
 <?php
 }
 ?>
-		<itunes:image
-			href="<?=$repImg?>" />
+		<itunes:image href="<?=$repImg?>" />
 	</channel>
 </rss>
