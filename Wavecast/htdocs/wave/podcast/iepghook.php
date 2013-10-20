@@ -20,12 +20,11 @@ $parsed = parse_url($targetURL);
 $targetURLBase = $parsed['scheme'] . '://' . $parsed['host'] . $parsed['path'];
 $targetHost = $parsed['host'];
 
-$retargetURLBase = 'http://' . $_SERVER['SERVER_ADDR'] . '/wave/jp/vidrecsrc.php?proc=iepg&iepg=';
-
 $html = file_get_contents($targetURL);
 # accesses to iepg files
 $html = preg_replace_callback('|href="/iepg\\.tvpi\\?id=(\d+)"|i',
 		function($matches) {
+			$retargetURLBase = 'http://' . $_SERVER['SERVER_ADDR'] . '/wave/jp/vidrecsrc.php?proc=iepg&iepg=';
 			return 'href="' . $retargetURLBase . urlencode($matches[1]) . '"'; 
 		}, $html);
 #$html = preg_replace('|href="\\s*\\?head=(\d+)\\s*"|i',
