@@ -25,13 +25,18 @@ $targetRootURL = $parsed ['scheme'] . '://' . $parsed ['host'];
 $targetURLBase = $targetRootURL . $parsed ['path'];
 
 // accesses to iepg files
-$html = preg_replace_callback ( '|href="/iepg\\.tvpi\\?id=(\d+)"|i', function ($matches) {
+$html = preg_replace_callback ( '|href\s*=\s*"/iepg\\.tvpi\\?id=(\d+)"|i', function ($matches) {
+	return "href=\"http://${_SERVER['SERVER_NAME']}/wave/jp/vidrecsrc.php?proc=iepg&iepg=" . urlencode ( 'http://tv.so-net.ne.jp/iepg.tvpi?id=' . $matches [1] ) . '"';
+}, $html );
+$html = preg_replace_callback ( '|href\s*=\s*"/iepgCompleted\\.action\\?id=(\d+)"|i', function ($matches) {
 	return "href=\"http://${_SERVER['SERVER_NAME']}/wave/jp/vidrecsrc.php?proc=iepg&iepg=" . urlencode ( 'http://tv.so-net.ne.jp/iepg.tvpi?id=' . $matches [1] ) . '"';
 }, $html );
 // links to other pages
-$html = preg_replace ( '|a\\s+href="\\s*(\\?[^"]*)\\s*"|i', "a href=\"${scriptURL}?target=${targetURLBase}" . '${1}"', $html );
-$html = preg_replace ( '|a\\s+href="\\s*(/[^"]*)\\s*"|i', "a href=\"${scriptURL}?target=${targetRootURL}" . '${1}"', $html );
-$html = preg_replace ( '|action="\\s*(/[^"]*)\\s*"([^>]*>)|i', "action=\"${scriptURL}" . '"${2}' . "\n" . '<input type="hidden" name="target" value="' . $targetRootURL . '${1}" />', $html );
+#$html = preg_replace ( '|a(\s+(?:[^>]+\s+)*)href\s*=\s*"(http\://tv\.so-net\.ne\.jp/[^"]*)\s*"|i', 'a${1}href="' . "${scriptURL}?target=" . '${2}"', $html );
+$html = preg_replace ( '|a(\s+)href\s*=\s*"(http\://tv\.so-net\.ne\.jp/[^"]*)\s*"|i', 'a${1}href="' . "${scriptURL}?target=" . '${2}"', $html );
+$html = preg_replace ( '|a(\s+)href\s*=\s*"\s*(\?[^"]*)\s*"|i', 'a${1}href="' . "${scriptURL}?target=${targetURLBase}" . '${2}"', $html );
+$html = preg_replace ( '|a(\s+)href\s*=\s*"\s*(/[^"]*)\s*"|i', 'a${1}href="' . "${scriptURL}?target=${targetRootURL}" . '${2}"', $html );
+$html = preg_replace ( '|action="\s*(/[^"]*)\s*"([^>]*>)|i', "action=\"${scriptURL}" . '"${2}' . "\n" . '<input type="hidden" name="target" value="' . $targetRootURL . '${1}" />', $html );
 $html = str_replace ( "<head>", "<head>\n<base href=\"${targetURL}\" />", $html );
 echo $html;
 function get_html($targetURL) {
