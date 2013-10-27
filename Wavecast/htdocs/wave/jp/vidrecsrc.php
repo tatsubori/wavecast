@@ -399,7 +399,7 @@ header("Pragma: no-cache");
                                <a class="grayButton" style="" href="javascript:settyp2('iepg');" rel="external" >iEPGを利用</a>
                             </td>
                             <td>
-                                <a href="/wave/podcast/iepghook.php" style="margin-left: 10px; color:white; font-weight:normal; font-size: 14px; text-decoration:underline;" >番組表から直接予約</a>　|
+                                <a href="/wave/podcast/iepghook.php" style="margin-left: 10px; color:white; font-weight:normal; font-size: 14px; text-decoration:underline;" >番組表から直接予約</a>
                                 <a href="http://tv.so-net.ne.jp/" target="_blank" rel="external" style="margin-left: 10px; color:white; font-weight:normal; font-size: 14px; text-decoration:underline;" >iEPG,テレビ王国へ</a>
                             </td>
                             </tr>
