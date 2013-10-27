@@ -3,7 +3,7 @@ header("Content-Type: text/xml; charset=UTF-8");
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
 
-$host = $_SERVER['SERVER_ADDR'];
+$rootURL = (empty ( $_SERVER ['HTTPS'] ) ? 'http://' : 'https://') . $_SERVER ['HTTP_HOST'];
 
 if (!($cn = mysql_connect("localhost", "root", "happy777"))) die;
 $rtn = mysql_query("SET NAMES utf8" , $cn);
@@ -41,16 +41,16 @@ while ($item = mysql_fetch_array($rs)) {
 	$wRSSDate = date(DATE_RSS, $wDate);
 
 	$filename = "/media/".$wDate2."/".$item['ch_type']."-".$item['ch_code']."-".$wDate3;
-	$wVideo = "http://${host}${filename}-s.mp4";
+	$wVideo = "${rootURL}${filename}-s.mp4";
 	$wGUID = "http://tatsubori.net/wavecast${filename}-s.mp4";
 	$filesize = filesize($_SERVER['DOCUMENT_ROOT'] . "${filename}-s.mp4");
 	
 	if ($item['err_flg'] == 1) {
-        $wImg = "http://${host}/wave/jp/error.png";
+        $wImg = "${rootURL}/wave/jp/error.png";
 	} else if ($item['rec_sts'] == -1 || $item['rec_sts'] == 0) {
-		$wImg = "http://${host}/wave/jp/recording.png";
+		$wImg = "${rootURL}/wave/jp/recording.png";
 	} else {
-		$wImg = "http://${host}${filename}.jpg";
+		$wImg = "${rootURL}${filename}.jpg";
         $repImg = ($repImg == null) ? $wImg : $repImg;
     }
 ?>
