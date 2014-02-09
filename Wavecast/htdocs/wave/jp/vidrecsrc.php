@@ -208,88 +208,105 @@ if($proc == "save"){
         if (count($errors) == 0) {
             //$_SESSION['msg'] = $_REQUEST['ch_type']."|".$_REQUEST['ch_code'];
 
-            //録画日時
-            $_SESSION['vid_sta2'] = new DateTime($_SESSION['vid_sta']);
-            $_SESSION['vid_end2'] = new DateTime($_SESSION['vid_sta']);
+            function add_vidrecsrc($vid_sta, $vid_time, $vid_namesuffix = '') {
+            	//録画日時
+            	$_SESSION['vid_sta2'] = new DateTime($vid_sta);
+            	$_SESSION['vid_end2'] = new DateTime($vid_sta);
+                        	 
+            	//録画の時間のみ
+            	$_SESSION['vid_sta2_2'] = new DateTime($vid_sta);
+            	$_SESSION['vid_end2_2'] = new DateTime($vid_sta);
+            	$_SESSION['vid_sta2_2']->setDate(1900, 1, 1);
+            	$_SESSION['vid_end2_2']->setDate(1900, 1, 1);
+            	 
+            	//$_SESSION['vid_sta2']->modify("+".$_SESSION['vid_time'].""." minuites");
+            	$_SESSION['vid_end2']->add(new DateInterval('PT'.$vid_time.'M'));
+            	$_SESSION['vid_end2_2']->add(new DateInterval('PT'.$vid_time.'M'));
+            	
+            	$_SESSION['vid_wk']=$_SESSION['vid_sta2']->format("D");
+            	
+            	$_SESSION['msg'] = $_SESSION['vid_sta2']->format("Y-m-d H:i:s")."|".$_SESSION['vid_end2']->format("Y-m-d H:i:s");
+            	 
+            	//$vid_cycles = array("一回のみ"=>"一回のみ", "毎日"=>"毎日", "毎週"=>"毎週");
+            	$sql = "select * from vidrecsrc where (";
+            	
+            	$wstr0="";
+            	$wstr1="";
+            	$wstr2="";
+            	$wstr3="";
+            	$wstr4="";
+            	
+            	if($_SESSION['vid_cycle']=="一回のみ"){ $wstr2="and vid_wk='".$_SESSION['vid_wk']."'"; $wstr4=" and vid_sta<='".$_SESSION['vid_end2']->format("Y-m-d H:i:s")."'"; }
+            	if($_SESSION['vid_cycle']=="毎週"){ $wstr0="_2"; $wstr1="2"; $wstr3=" and vid_end>='".$_SESSION['vid_sta2']->format("Y-m-d H:i:s")."'"; $wstr2="and vid_wk='".$_SESSION['vid_wk']."'"; }
+            	if($_SESSION['vid_cycle']=="毎日"){ $wstr0="_2"; $wstr1="2"; $wstr3=" and vid_end>='".$_SESSION['vid_sta2']->format("Y-m-d H:i:s")."'"; $wstr2="";}
+            	
+            	$sql.= "(((vid_sta".$wstr1."<='".$_SESSION['vid_sta2'.$wstr0]->format("Y-m-d H:i:s")."' and vid_end".$wstr1.">'".$_SESSION['vid_sta2'.$wstr0]->format("Y-m-d H:i:s")."') or ";
+            	$sql.= "(vid_sta".$wstr1."<'".$_SESSION['vid_end2'.$wstr0]->format("Y-m-d H:i:s")."' and vid_end".$wstr1.">='".$_SESSION['vid_end2'.$wstr0]->format("Y-m-d H:i:s")."')) ".$wstr3." and vid_cycle='一回のみ' ".$wstr2." ) or ";
+            	
+            	$sql.= "(((vid_sta2<='".$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."' and vid_end2>'".$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."') or ";
+            	$sql.= "(vid_sta2<'".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."' and vid_end2>='".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."')) ".$wstr4." and vid_cycle='毎週' ".$wstr2." ) or ";
+            	
+            	$sql.= "(((vid_sta2<='".$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."' and vid_end2>'".$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."') or ";
+            	$sql.= "(vid_sta2<'".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."' and vid_end2>='".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."')) ".$wstr4." and vid_cycle='毎日')";
+            	 
+            	$sql.= ")";
+            	if (!($rs = mysql_query($sql))) die;
 
-            //録画の時間のみ
-            $_SESSION['vid_sta2_2'] = new DateTime($_SESSION['vid_sta']);
-            $_SESSION['vid_end2_2'] = new DateTime($_SESSION['vid_sta']);
-            $_SESSION['vid_sta2_2']->setDate(1900, 1, 1);
-            $_SESSION['vid_end2_2']->setDate(1900, 1, 1);
-
-            //$_SESSION['vid_sta2']->modify("+".$_SESSION['vid_time'].""." minuites");
-            $_SESSION['vid_end2']->add(new DateInterval('PT'.$_SESSION['vid_time'].'M'));
-            $_SESSION['vid_end2_2']->add(new DateInterval('PT'.$_SESSION['vid_time'].'M'));
-
-            $_SESSION['vid_wk']=$_SESSION['vid_sta2']->format("D");
-
-            $_SESSION['msg'] = $_SESSION['vid_sta2']->format("Y-m-d H:i:s")."|".$_SESSION['vid_end2']->format("Y-m-d H:i:s");
-
-            //$vid_cycles = array("一回のみ"=>"一回のみ", "毎日"=>"毎日", "毎週"=>"毎週");
-            $sql = "select * from vidrecsrc where (";
-
-            $wstr0="";
-            $wstr1="";
-            $wstr2="";
-            $wstr3="";
-            $wstr4="";
-
-            if($_SESSION['vid_cycle']=="一回のみ"){ $wstr2="and vid_wk='".$_SESSION['vid_wk']."'"; $wstr4=" and vid_sta<='".$_SESSION['vid_end2']->format("Y-m-d H:i:s")."'"; }
-            if($_SESSION['vid_cycle']=="毎週"){ $wstr0="_2"; $wstr1="2"; $wstr3=" and vid_end>='".$_SESSION['vid_sta2']->format("Y-m-d H:i:s")."'"; $wstr2="and vid_wk='".$_SESSION['vid_wk']."'"; }
-            if($_SESSION['vid_cycle']=="毎日"){ $wstr0="_2"; $wstr1="2"; $wstr3=" and vid_end>='".$_SESSION['vid_sta2']->format("Y-m-d H:i:s")."'"; $wstr2="";}
-
-            $sql.= "(((vid_sta".$wstr1."<='".$_SESSION['vid_sta2'.$wstr0]->format("Y-m-d H:i:s")."' and vid_end".$wstr1.">'".$_SESSION['vid_sta2'.$wstr0]->format("Y-m-d H:i:s")."') or ";
-            $sql.= "(vid_sta".$wstr1."<'".$_SESSION['vid_end2'.$wstr0]->format("Y-m-d H:i:s")."' and vid_end".$wstr1.">='".$_SESSION['vid_end2'.$wstr0]->format("Y-m-d H:i:s")."')) ".$wstr3." and vid_cycle='一回のみ' ".$wstr2." ) or ";
-
-            $sql.= "(((vid_sta2<='".$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."' and vid_end2>'".$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."') or ";
-            $sql.= "(vid_sta2<'".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."' and vid_end2>='".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."')) ".$wstr4." and vid_cycle='毎週' ".$wstr2." ) or ";
-
-            $sql.= "(((vid_sta2<='".$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."' and vid_end2>'".$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."') or ";
-            $sql.= "(vid_sta2<'".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."' and vid_end2>='".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."')) ".$wstr4." and vid_cycle='毎日')";
-
-            $sql.= ")";
-            if (!($rs = mysql_query($sql))) die;
-
-            if(mysql_num_rows($rs)==0){
-                $sql = "INSERT INTO vidrecsrc (ch_type,ch_code,ch_name,vid_stayy,vid_stamm,vid_wk,vid_sta,vid_end,vid_sta2,vid_end2,vid_time,vid_cycle,vid_name,vid_file) VALUES ('";
-                $sql.=$_SESSION['ch_type']."','".$_SESSION['ch_code']."','".$_SESSION['ch_name']."','";
-                $sql.=$_SESSION['vid_sta2']->format("Y")."','".$_SESSION['vid_sta2']->format("m")."','".$_SESSION['vid_wk']."','";
-                $sql.=$_SESSION['vid_sta2']->format("Y-m-d H:i:s")."','".$_SESSION['vid_end2']->format("Y-m-d H:i:s")."','";
-                $sql.=$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."','".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."',";
-                $sql.=$_SESSION['vid_time'].",'".$_SESSION['vid_cycle']."','".$_SESSION['vid_name']."','";
-                $sql.=$_SESSION['ch_type']."-".$_SESSION['ch_code']."-".$_SESSION['vid_sta2']->format("Ymd-Hi")."')";
-
-                if (!(mysql_query($sql))) die;
-
-                if($_SESSION['ch_name']!=""){
-                    $sql = "UPDATE tuneinfo SET data3='".$_SESSION['ch_name']."' WHERE code='".$_SESSION['ch_code']."'";
-                    if (!(mysql_query($sql))) die;
-                }
-
-                $_SESSION['iepg'] = "";
-                $_SESSION['vid_sta'] = "";
-                $_SESSION['ch_name'] = "";
-                $_SESSION['vid_name'] = "";
-                $_SESSION['vid_time'] = "";
-                $_SESSION['ch_type'] = "UHF";
-                $_SESSION['ch_code'] = "";
-                $_SESSION['vid_cycle'] = "";
-
-            }else{
-
-                array_push($errors, "＜録画時間が重複してます＞");
-                $i=0;
-                while ($item = mysql_fetch_array($rs)) {
-                    $i+=1;
-                    if($item['ch_type']=="UHF") $wStr3="地デジ";
-                    if($item['ch_type']=="BS") $wStr3="BS衛星";
-                    if($item['ch_type']=="CS") $wStr3="CS衛星";
-                    array_push($errors, $i.")  ﾀｲﾌﾟ:".$wStr3.", ﾁｬﾝﾈﾙ#:".substr($item['ch_code'],2,4) .", 番組:".$item['vid_name'].", 日時:".$item['vid_sta'].", 時間:".$item['vid_time'],"分".", 周期:".$item['vid_cycle']);
-                }
+            	if(mysql_num_rows($rs)==0){
+            		$sql = "INSERT INTO vidrecsrc (ch_type,ch_code,ch_name,vid_stayy,vid_stamm,vid_wk,vid_sta,vid_end,vid_sta2,vid_end2,vid_time,vid_cycle,vid_name,vid_file) VALUES ('";
+            		$sql.=$_SESSION['ch_type']."','".$_SESSION['ch_code']."','".$_SESSION['ch_name']."','";
+            		$sql.=$_SESSION['vid_sta2']->format("Y")."','".$_SESSION['vid_sta2']->format("m")."','".$_SESSION['vid_wk']."','";
+            		$sql.=$_SESSION['vid_sta2']->format("Y-m-d H:i:s")."','".$_SESSION['vid_end2']->format("Y-m-d H:i:s")."','";
+            		$sql.=$_SESSION['vid_sta2_2']->format("Y-m-d H:i:s")."','".$_SESSION['vid_end2_2']->format("Y-m-d H:i:s")."',";
+            		$sql.=$vid_time.",'".$_SESSION['vid_cycle']."','".$_SESSION['vid_name'].$vid_namesuffix."','";
+            		$sql.=$_SESSION['ch_type']."-".$_SESSION['ch_code']."-".$_SESSION['vid_sta2']->format("Ymd-Hi")."')";
+            		
+            		if (!(mysql_query($sql))) die;
+            		
+            		if($_SESSION['ch_name']!=""){
+            			$sql = "UPDATE tuneinfo SET data3='".$_SESSION['ch_name']."' WHERE code='".$_SESSION['ch_code']."'";
+            			if (!(mysql_query($sql))) die;
+            		}
+                
+            		$_SESSION['iepg'] = "";
+            		$_SESSION['vid_sta'] = "";
+            		$_SESSION['ch_name'] = "";
+            		$_SESSION['vid_name'] = "";
+            		$_SESSION['vid_time'] = "";
+            		$_SESSION['ch_type'] = "UHF";
+            		$_SESSION['ch_code'] = "";
+            		$_SESSION['vid_cycle'] = "";        
+            	} else {
+					array_push($errors, "＜録画時間が重複してます＞");
+                	$i=0;
+					while ($item = mysql_fetch_array($rs)) {
+                    	$i+=1;
+                    	if($item['ch_type']=="UHF") $wStr3="地デジ";
+                    	if($item['ch_type']=="BS") $wStr3="BS衛星";
+                    	if($item['ch_type']=="CS") $wStr3="CS衛星";
+                    	array_push($errors, $i.")  ﾀｲﾌﾟ:".$wStr3.", ﾁｬﾝﾈﾙ#:".substr($item['ch_code'],2,4) .", 番組:".$item['vid_name'].", 日時:".$item['vid_sta'].", 時間:".$item['vid_time'],"分".", 周期:".$item['vid_cycle']);
+                    }
+            	}
             }
-        }
+            if ($_SESSION['vid_time'] < 120) {
+        		add_vidrecsrc($_SESSION['vid_sta'], $_SESSION['vid_time']);
+            } else {
+            	$vid_div = floor($_SESSION['vid_time'] / 60);
+            	for ($i = 0; $i < $vid_div; $i++) {
+            		if ($i == $vid_div - 1) {
+            			//last
+            			$vid_time = $_SESSION['vid_time'] - $i * 60;
+            		} else {
+            			$vid_time = 60;  // or 59
+            		}
+            		
+            		$vid_sta = new DateTime($_SESSION['vid_sta']);
+            		$vid_sta->add(new DateInterval('PT'.(60 * $i).'M'));
 
+            	    add_vidrecsrc($vid_sta, $vid_time, ' ' . ($i + 1) . '/' . $vid_div);
+            	}
+             }
+        }
     } catch (Exception $e) {
         //echo "例外キャッチ：", $e->getMessage(), "\n";
         array_push($errors, "※入力されたデータをお確かめください。");
