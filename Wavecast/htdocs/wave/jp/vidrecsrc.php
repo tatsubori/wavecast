@@ -267,15 +267,6 @@ if($proc == "save"){
             			$sql = "UPDATE tuneinfo SET data3='".$_SESSION['ch_name']."' WHERE code='".$_SESSION['ch_code']."'";
             			if (!(mysql_query($sql))) die;
             		}
-                
-            		$_SESSION['iepg'] = "";
-            		$_SESSION['vid_sta'] = "";
-            		$_SESSION['ch_name'] = "";
-            		$_SESSION['vid_name'] = "";
-            		$_SESSION['vid_time'] = "";
-            		$_SESSION['ch_type'] = "UHF";
-            		$_SESSION['ch_code'] = "";
-            		$_SESSION['vid_cycle'] = "";        
             	} else {
 					array_push($errors, "＜録画時間が重複してます＞");
                 	$i=0;
@@ -289,8 +280,10 @@ if($proc == "save"){
             	}
             }
             if ($_SESSION['vid_time'] < 120) {
+            	//array_push($errors, "debug: < 120");
         		add_vidrecsrc($_SESSION['vid_sta'], $_SESSION['vid_time']);
             } else {
+            	//array_push($errors, "debug: >= 120");
             	$vid_div = floor($_SESSION['vid_time'] / 60);
             	for ($i = 0; $i < $vid_div; $i++) {
             		if ($i == $vid_div - 1) {
@@ -303,13 +296,21 @@ if($proc == "save"){
             		$vid_sta = new DateTime($_SESSION['vid_sta']);
             		$vid_sta->add(new DateInterval('PT'.(60 * $i).'M'));
 
-            	    add_vidrecsrc($vid_sta, $vid_time, ' ' . ($i + 1) . '/' . $vid_div);
+            	    add_vidrecsrc($vid_sta->format("Y-m-d H:i:s"), $vid_time, ' ' . ($i + 1) . '/' . $vid_div);
             	}
-             }
+            }
+            $_SESSION['iepg'] = "";
+            $_SESSION['vid_sta'] = "";
+            $_SESSION['ch_name'] = "";
+            $_SESSION['vid_name'] = "";
+            $_SESSION['vid_time'] = "";
+            $_SESSION['ch_type'] = "UHF";
+            $_SESSION['ch_code'] = "";
+            $_SESSION['vid_cycle'] = "";
         }
     } catch (Exception $e) {
         //echo "例外キャッチ：", $e->getMessage(), "\n";
-        array_push($errors, "※入力されたデータをお確かめください。");
+        array_push($errors, "※入力されたデータをお確かめください。" . $e->getMessage());
     }
 }
 
