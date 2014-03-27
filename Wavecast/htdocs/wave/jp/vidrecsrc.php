@@ -208,7 +208,7 @@ if($proc == "save"){
         if (count($errors) == 0) {
             //$_SESSION['msg'] = $_REQUEST['ch_type']."|".$_REQUEST['ch_code'];
 
-            function add_vidrecsrc($vid_sta, $vid_time, $vid_namesuffix = '') {
+            function add_vidrecsrc($errors, $vid_sta, $vid_time, $vid_namesuffix = '') {
             	//録画日時
             	$_SESSION['vid_sta2'] = new DateTime($vid_sta);
             	$_SESSION['vid_end2'] = new DateTime($vid_sta);
@@ -281,7 +281,7 @@ if($proc == "save"){
             }
             if ($_SESSION['vid_time'] < 120) {
             	//array_push($errors, "debug: < 120");
-        		add_vidrecsrc($_SESSION['vid_sta'], $_SESSION['vid_time']);
+        		add_vidrecsrc($errors, $_SESSION['vid_sta'], $_SESSION['vid_time']);
             } else {
             	//array_push($errors, "debug: >= 120");
             	$vid_div = floor($_SESSION['vid_time'] / 60);
@@ -296,7 +296,7 @@ if($proc == "save"){
             		$vid_sta = new DateTime($_SESSION['vid_sta']);
             		$vid_sta->add(new DateInterval('PT'.(60 * $i).'M'));
 
-            	    add_vidrecsrc($vid_sta->format("Y-m-d H:i:s"), $vid_time, ' ' . ($i + 1) . '/' . $vid_div);
+            	    add_vidrecsrc($errors, $vid_sta->format("Y-m-d H:i:s"), $vid_time, ' ' . ($i + 1) . '/' . $vid_div);
             	}
             }
             $_SESSION['iepg'] = "";
