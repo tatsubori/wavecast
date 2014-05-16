@@ -32,7 +32,7 @@ $html = preg_replace_callback ( '|href\s*=\s*"/iepgCompleted\\.action\\?id=(\d+)
 	return "href=\"http://${_SERVER['SERVER_NAME']}/wave/jp/vidrecsrc.php?proc=iepg&iepg=" . urlencode ( 'http://tv.so-net.ne.jp/iepg.tvpi?id=' . $matches [1] ) . '"';
 }, $html );
 // links to other pages
-#$html = preg_replace ( '|a(\s+(?:[^>]+\s+)*)href\s*=\s*"(http\://tv\.so-net\.ne\.jp/[^"]*)\s*"|i', 'a${1}href="' . "${scriptURL}?target=" . '${2}"', $html );
+// html = preg_replace ( '|a(\s+(?:[^>]+\s+)*)href\s*=\s*"(http\://tv\.so-net\.ne\.jp/[^"]*)\s*"|i', 'a${1}href="' . "${scriptURL}?target=" . '${2}"', $html );
 $html = preg_replace ( '|a(\s+)href\s*=\s*"(http\://tv\.so-net\.ne\.jp/[^"]*)\s*"|i', 'a${1}href="' . "${scriptURL}?target=" . '${2}"', $html );
 $html = preg_replace ( '|a(\s+)href\s*=\s*"\s*(\?[^"]*)\s*"|i', 'a${1}href="' . "${scriptURL}?target=${targetURLBase}" . '${2}"', $html );
 $html = preg_replace ( '|a(\s+)href\s*=\s*"\s*(/[^"]*)\s*"|i', 'a${1}href="' . "${scriptURL}?target=${targetRootURL}" . '${2}"', $html );
@@ -42,30 +42,39 @@ echo $html;
 function get_html($targetURL) {
 	global $scriptURL;
 	
+	// we want to browser to follow redirection instead of this script
 	$context = array (
 			'http' => array (
-					'follow_location' => false 
+					'follow_location' => false,
+					'header' => array()
 			) 
 	);
-	if (isset($_COOKIE['_tc'])) {
-		$context['http']['header'] = 'Cookie: ' . urldecode($_COOKIE['_tc']) . "\r\n";
+	
+	$request_headers = getallheaders ();
+	foreach ( $request_headers as $header ) {
+		$context ['http'] ['header'][] = $header;
+	}
+	
+	// cookies parameters are wrapped into a single _tc cookie parameter
+	if (isset ( $_COOKIE ['_tc'] )) {
+		$context ['http'] ['header'][] = 'Cookie: ' . urldecode ( $_COOKIE ['_tc'] ) . "\r\n";
 	}
 	
 	$html = file_get_contents ( $targetURL, false, stream_context_create ( $context ) );
 	$location = false;
 	foreach ( $http_response_header as $header ) {
-		header('X-Debug: ' . $header, false);
+		header ( 'X-Debug: ' . $header, false );
 		if (! strncmp ( $header, 'Set-Cookie: ', strlen ( 'Set-Cookie: ' ) )) {
 			$cookie = substr ( $header, strlen ( 'Set-Cookie: ' ) );
-			header('Set-Cookie: _tc=' . urlencode($cookie), true);
+			header ( 'Set-Cookie: _tc=' . urlencode ( $cookie ), true );
 		} else if (! strncmp ( $header, 'Location: ', strlen ( 'Location: ' ) )) {
 			$location = true;
 			$targetURL = substr ( $header, strlen ( 'Location: ' ) );
-			header('Location: ' . "${scriptURL}?target=${targetURL}");
+			header ( 'Location: ' . "${scriptURL}?target=${targetURL}" );
 		}
 	}
 	if ($location) {
-		exit();
+		exit ();
 	}
 	
 	return array (
