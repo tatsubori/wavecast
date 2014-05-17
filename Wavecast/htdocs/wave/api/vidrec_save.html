@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>予約登録</title>
+        <style type="text/css" media="screen">@import "../jqtouch/jqtouch.min.css";</style>
+        <style type="text/css" media="screen">@import "../themes/jqt/theme.min.css";</style>
+        <script src="../jqtouch/jquery.1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../jqtouch/jqtouch.min.js" type="application/x-javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+            var jQT = new $.jQTouch({
+                icon: 'jqtouch.png',
+                addGlossToIcon: true,
+                fullScreen: true,
+                startupScreen: 'jqt_startup.png',
+                statusBar: 'black',
+                preloadImages: [
+                    '../themes/jqt/img/back_button.png',
+                    '../themes/jqt/img/back_button_clicked.png',
+                    '../themes/jqt/img/button_clicked.png',
+                    '../themes/jqt/img/grayButton.png',
+                    '../themes/jqt/img/whiteButton.png',
+                    '../themes/jqt/img/loading.gif'
+                    ]
+            });
+            $(function (){
+                $("body > *").css({display:"none", position:"absolute"});
+            });
+
+            function goto2(url){
+	        	location.href=url;
+            }
+            function settyp2(code){
+                $("#proc").val(code);
+                $("#form1").attr("action","vidrec_save.php");
+                document.entryForm.submit();
+            }
+            function init2(){
+            }
+            function paste(){
+            }
+        </script>
+    </head>
+    <body>
+        <div>
+            <form name="entryForm" action="" method="POST" class="form" id="form1" >
+                <h2 style="color: lightblue;">予約録画入力</h2>
+                <ul class="rounded">
+                    <li><span style="color:red; font-weight:normal; font-size:16px;" >＊マークは必須項目を意味します</span></li>
+                    <li><span style="color:white; font-weight:normal;" >チャンネル番号<span style="color:red;">＊</span>:<span style="color:red;">次項目のチャンネル名と合わせてください。<br />各チャンネル名に対して１度だけ設定が必要です。次回からは自動認識します。</span><br /></span>
+                        <select name="ch_code" id="ch_code" style="background-color:white; width:300px; margin-left: 4px;cursor: pointer;" >
+                            <option value="" >こちらをクリック</option>
+                            <option value="0101">#1: NHK(総合) [27]</option>
+                            <option value="0102">#2: NHK(教育) [26]</option>
+                            <option value="0103">#3: テレビ神奈川 [18]</option>
+                            <option value="0104">#4: 日本テレビ [25]</option>
+                            <option value="0105">#5: テレビ朝日 [24]</option>
+                            <option value="0106">#6: TBS [22]</option>
+                            <option value="0107">#7: テレビ東京 [23]</option>
+                            <option value="0108">#8: フジテレビ [21]</option>
+                        </select>
+                    </li>
+                    <li><span style="color:white; font-weight:normal;" >録画日時<span style="color:red;">＊</span>: (例 2011-01-07 08:09) 24時間で入力<br /></span>
+                        <input style="background-color:white; width:180px; margin-left: 4px;" type="text" name="vid_sta" id="vid_sta" value="2011-01-07 08:09"  />
+                    </li>
+                    <li><span style="color:white; font-weight:normal;" >録画時間<span style="color:red;">＊</span>: (例 15) 分を入力<br /></span>
+                        <input style="background-color:white; width:120px; margin-left: 4px;" type="text" name="vid_time" id="vid_time" value="15" />
+                    </li>
+                    <li><span style="color:white; font-weight:normal;" >番組名<span style="color:red;">＊</span>:<br /></span>
+                        <input style="background-color:white;" type="text" name="vid_name" id="vid_name" value="番組名" />
+                    </li>
+                    <li><span style="color:white; font-weight:normal;" >録画周期<span style="color:red;">＊</span>:<br /></span>
+                        <select name="vid_cycle" id="vid_cycle" style="background-color:white; width:180px; margin-left: 4px;cursor: pointer;">
+                            <option value="一回のみ">一回のみ</option>
+                            <option value="毎週">毎週</option>
+                            <option value="毎日">毎日</option>
+                        </select>
+                    </li>
+                    <li>
+                        <a class="grayButton" href="javascript:settyp2('save');" rel="external" >予約を登録する</a>
+                    </li>
+                </ul>
+                
+            </form>
+            <div class="info">
+                <p><strong>Powered by WAVEUSA.COM</strong></p>
+            </div>
+        </div>
+    </body>
+</html>
