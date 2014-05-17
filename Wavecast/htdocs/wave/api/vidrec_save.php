@@ -36,7 +36,7 @@ try {
 	
 	// store in DB
 	if (count ( $errors ) == 0) {
-		function add_vidrecsrc($errors, $vid_sta, $vid_time, $vid_namesuffix = '') {
+		function add_vidrecsrc($errors, $vid_sta, $vid_time, $vid_cycle, $vid_namesuffix = '') {
 			// 録画日時
 			$vid_sta2 = new DateTime ( $vid_sta );
 			$vid_end2 = new DateTime ( $vid_sta );
@@ -79,8 +79,8 @@ try {
 				$wstr2 = "";
 			}
 			
-			$sql .= "(((vid_sta" . $wstr1 . "<='" . ${$vid_sta2 . $wstr0}->format ( "Y-m-d H:i:s" ) . "' and vid_end" . $wstr1 . ">'" . ${$vid_sta2 . $wstr0}->format ( "Y-m-d H:i:s" ) . "') or ";
-			$sql .= "(vid_sta" . $wstr1 . "<'" . ${$vid_end2 . $wstr0}->format ( "Y-m-d H:i:s" ) . "' and vid_end" . $wstr1 . ">='" . ${$vid_end2 . $wstr0}->format ( "Y-m-d H:i:s" ) . "')) " . $wstr3 . " and vid_cycle='一回のみ' " . $wstr2 . " ) or ";
+			$sql .= "(((vid_sta" . $wstr1 . "<='" . ${'vid_sta2' . $wstr0}->format ( "Y-m-d H:i:s" ) . "' and vid_end" . $wstr1 . ">'" . ${'vid_sta2' . $wstr0}->format ( "Y-m-d H:i:s" ) . "') or ";
+			$sql .= "(vid_sta" . $wstr1 . "<'" . ${'vid_end2' . $wstr0}->format ( "Y-m-d H:i:s" ) . "' and vid_end" . $wstr1 . ">='" . ${'vid_end2' . $wstr0}->format ( "Y-m-d H:i:s" ) . "')) " . $wstr3 . " and vid_cycle='一回のみ' " . $wstr2 . " ) or ";
 			
 			$sql .= "(((vid_sta2<='" . $vid_sta2_2->format ( "Y-m-d H:i:s" ) . "' and vid_end2>'" . $vid_sta2_2->format ( "Y-m-d H:i:s" ) . "') or ";
 			$sql .= "(vid_sta2<'" . $vid_end2_2->format ( "Y-m-d H:i:s" ) . "' and vid_end2>='" . $vid_end2_2->format ( "Y-m-d H:i:s" ) . "')) " . $wstr4 . " and vid_cycle='毎週' " . $wstr2 . " ) or ";
@@ -125,7 +125,7 @@ try {
 			}
 		}
 		if ($vid_time < 120) {
-			add_vidrecsrc ( $errors, $vid_sta, $vid_time );
+			add_vidrecsrc ( $errors, $vid_sta, $vid_time, $vid_cycle );
 		} else {
 			$vid_div = floor ( $vid_time / 60 );
 			for($i = 0; $i < $vid_div; $i ++) {
